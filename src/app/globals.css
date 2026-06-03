@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sand-50: #FAF6F0;
+  --color-sand-100: #FDFBF7;
+  --color-cinnamon-950: #2C1A11;
+  --color-cinnamon-900: #3E271D;
+  --color-chilli: #C0392B;
+  --color-turmeric: #E67E22;
+  --color-turmeric-light: #F39C12;
+  --color-coriander: #27AE60;
+  --color-coriander-dark: #1E6B3E;
+  --color-coconut: #F1C40F;
+  --color-coconut-light: #FFF6D1;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-reverse: float-reverse 7s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 4s ease-in-out infinite;
+  --animate-liquid-flow: liquid-flow 3s ease-in-out infinite;
+  --animate-glow: glow 2s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(3deg); }
+  }
+  @keyframes float-reverse {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(12px) rotate(-3deg); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes liquid-flow {
+    0% { stroke-dashoffset: 100; }
+    100% { stroke-dashoffset: 0; }
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(230, 126, 34, 0.2); }
+    50% { box-shadow: 0 0 25px rgba(230, 126, 34, 0.5); }
+  }
+}
+
+:root {
+  --background: #FAF6F0;
+  --foreground: #2C1A11;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Styles */
+.glass-panel {
+  background: rgba(253, 251, 247, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.glass-panel-dark {
+  background: rgba(44, 26, 17, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF6F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E67E22;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C0392B;
+}
+
+/* Glowing backdrops */
+.glow-chilli {
+  filter: blur(100px);
+  background: radial-gradient(circle, rgba(192, 57, 43, 0.2) 0%, transparent 70%);
+}
+
+.glow-turmeric {
+  filter: blur(100px);
+  background: radial-gradient(circle, rgba(230, 126, 34, 0.18) 0%, transparent 70%);
+}
+
+.glow-coriander {
+  filter: blur(100px);
+  background: radial-gradient(circle, rgba(39, 174, 96, 0.15) 0%, transparent 70%);
+}
+
+.glow-coconut {
+  filter: blur(100px);
+  background: radial-gradient(circle, rgba(241, 196, 15, 0.15) 0%, transparent 70%);
+}
