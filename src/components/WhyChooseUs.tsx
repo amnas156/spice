@@ -45,7 +45,7 @@ export default function WhyChooseUs() {
   ];
 
   return (
-    <section id="why-choose-us" className="py-24 relative overflow-hidden bg-sand-100/30 border-t border-turmeric/5">
+    <section id="why-choose-us" className="py-16 sm:py-24 relative overflow-hidden bg-sand-100/30 border-t border-turmeric/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">

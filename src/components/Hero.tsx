@@ -2,165 +2,152 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { Check, ArrowRight, Star, ShoppingBag, Users, Store, ShieldCheck } from "lucide-react";
 import SpiceParticles from "./SpiceParticles";
-import { Sparkles, ArrowRight } from "lucide-react";
+
+interface StatItem {
+  value: string;
+  label: string;
+  icon: React.ReactNode;
+}
 
 export default function Hero() {
+
+  const trustBadges = [
+    "100% Natural",
+    "No Artificial Colors",
+    "Freshly Packed",
+    "Premium Quality"
+  ];
+
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-gradient-to-b from-sand-50 to-sand-100/50"
+      className="relative min-h-screen flex flex-col justify-between pt-28 pb-10 overflow-hidden bg-white"
     >
-      {/* Dynamic Canvas Spice Particles Background */}
+      {/* Canvas Spice Particles Background */}
       <SpiceParticles />
 
-      {/* Radial Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] glow-turmeric rounded-full opacity-60 pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] glow-chilli rounded-full opacity-40 pointer-events-none" />
+      {/* Decorative Glow Ambient Elements */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#C89B3C]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-[#C62828]/5 rounded-full blur-[140px] pointer-events-none" />
+      
+      {/* Main Grid: Left copy, Right collage */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full flex-1 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center py-8 lg:py-16">
+        
+        {/* LEFT SIDE: Content Copy */}
+        <div className="lg:col-span-6 space-y-8 text-center lg:text-left order-1 lg:order-1 w-full">
+          {/* Small Badge */}
+          <div className="inline-flex items-center px-4.5 py-1.5 border border-[#C89B3C]/25 text-[9px] font-bold uppercase tracking-[0.3em] text-[#C89B3C] bg-[#C89B3C]/5">
+            100% Pure Kerala Spices
+          </div>
 
-      {/* Decorative Traditional Kerala Border / Waves Pattern (Soft Accent) */}
-      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-turmeric via-chilli to-coriander opacity-80" />
+          {/* Heading block */}
+          <div className="space-y-4">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-medium tracking-wide text-[#2C1A11] font-serif leading-tight">
+              Authentic Kerala Spices &amp; Coconut Oil
+            </h1>
+            <h2 className="text-xs sm:text-base font-serif text-[#C89B3C] italic tracking-wider uppercase font-semibold">
+              Bringing the rich aroma, natural taste, and traditional quality of Kerala directly to your kitchen.
+            </h2>
+          </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-        {/* Left text content */}
-        <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-turmeric/10 border border-turmeric/20 text-xs font-semibold tracking-wide text-turmeric uppercase"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>100% Traditional Malabar Sourcing</span>
-          </motion.div>
+          {/* Short description */}
+          <p className="text-xs sm:text-sm text-[#2C1A11]/70 leading-relaxed font-sans font-medium max-w-xl mx-auto lg:mx-0">
+            Carefully selected ingredients, hygienically processed, and packed fresh to deliver premium quality spices and coconut oil for every home.
+          </p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-cinnamon-950 font-serif leading-[1.15]"
-          >
-            Pure Essence of <br />
-            <span className="bg-gradient-to-r from-chilli via-turmeric to-turmeric-light bg-clip-text text-transparent">
-              Kerala Spices
-            </span>{" "}
-            & Oils
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-base sm:text-lg text-cinnamon-900/80 max-w-xl mx-auto lg:mx-0 leading-relaxed"
-          >
-            Experience authentic taste hand-picked from Wayanad and Idukki farms. Sun-dried, slow-roasted, and micro-milled to preserve curcumin, flavor, and purity without preservatives.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.45 }}
-            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4"
-          >
+          {/* Call-to-actions */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-4 max-w-md mx-auto lg:mx-0 w-full">
             <a
               href="#products"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-turmeric to-chilli hover:from-chilli hover:to-turmeric rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 gap-2"
+              className="inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest text-white bg-black hover:bg-[#C89B3C] transition-all duration-300 w-full sm:w-auto shadow-md"
             >
-              <span>Explore Products</span>
-              <ArrowRight className="w-4 h-4" />
+              Shop Now
             </a>
             <a
-              href="#contact"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-base font-semibold text-cinnamon-950 bg-white/70 hover:bg-white border border-cinnamon-900/10 hover:border-turmeric rounded-xl shadow-xs hover:shadow-md backdrop-blur-xs transition-all duration-200"
+              href="#products"
+              className="inline-flex items-center justify-center px-8 py-4 text-xs font-bold uppercase tracking-widest text-[#2C1A11] bg-white border border-[#2C1A11]/15 hover:border-[#2C1A11] transition-all duration-300 w-full sm:w-auto"
             >
-              Enquire Wholesale
+              View Products
             </a>
-          </motion.div>
+          </div>
+
+          {/* Trust Indicators checkmarks */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 pt-2">
+            {trustBadges.map((badge, idx) => (
+              <div key={idx} className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-[#2C1A11]/60">
+                <div className="bg-[#C89B3C]/10 p-1 rounded-full text-[#C89B3C]">
+                  <Check className="w-3 h-3 stroke-[3px]" />
+                </div>
+                <span>{badge}</span>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Right side floating package showcase (Enlarged 3D layered collage layout) */}
-        <div className="lg:col-span-5 flex justify-center relative w-full">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="relative w-full h-[350px] sm:h-[480px] md:h-[600px] lg:h-[700px] max-w-[450px] lg:max-w-none mx-auto flex items-center justify-center"
-          >
-            {/* Visual background glows */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-turmeric/10 to-chilli/10 rounded-full filter blur-2xl scale-90 animate-pulse-slow opacity-60 pointer-events-none" />
-
-            {/* Chilli Powder Package (Floating Right, Enlarge size + red glow) */}
+        {/* RIGHT SIDE: Floating Product Collage */}
+        <div className="lg:col-span-6 flex justify-center w-full order-2 lg:order-2 overflow-hidden px-2 py-4">
+          <div className="relative w-full max-w-[460px] aspect-[4/3] flex items-center justify-center min-h-[300px] lg:min-h-none">
+            
+            {/* Collage ambient backing */}
+            <div className="absolute w-[80%] h-[80%] bg-[#FAF6F0] border border-[#2C1A11]/5 rounded-3xl -rotate-2 scale-95 shadow-2xs pointer-events-none" />
+            
+            {/* Card 1: Mulaku Podi (Top Left) */}
             <motion.div
-              className="absolute right-[-8%] top-[18%] w-[48%] h-[58%] z-10 flex items-center justify-center"
-              animate={{
-                y: [0, -12, 0],
-                scale: [1, 1.05, 1],
-                rotate: [2, 5, 2],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.2,
-              }}
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-2 left-2 z-10 w-[42%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
             >
-              {/* Soft red glow */}
-              <div className="absolute inset-0 bg-chilli/15 rounded-full blur-2xl opacity-60 scale-75 pointer-events-none" />
-              <img
-                src="/images/hero/chilli.png"
-                alt="Mulaku Podi (Chilli Powder)"
-                className="w-full h-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.2)] select-none pointer-events-none"
-              />
+              <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
+                <img src="/products/mulaku-podi.png" alt="Chilli pouch" className="h-full object-contain max-h-[90px]" />
+              </div>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Mulaku Podi</span>
+              <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">50g - 1kg</span>
             </motion.div>
 
-            {/* Turmeric Powder Package (Floating Left, Enlarge size + gold glow) */}
+            {/* Card 2: Malli Podi (Top Right) */}
             <motion.div
-              className="absolute left-[-8%] bottom-[8%] w-[48%] h-[58%] z-10 flex items-center justify-center"
-              animate={{
-                y: [0, 12, 0],
-                scale: [1, 1.05, 1],
-                rotate: [-2, -6, -2],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.4,
-              }}
+              animate={{ y: [0, -14, 0] }}
+              transition={{ duration: 4.8, delay: 0.5, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute top-8 right-2 z-10 w-[40%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
             >
-              {/* Soft gold glow */}
-              <div className="absolute inset-0 bg-turmeric/15 rounded-full blur-2xl opacity-60 scale-75 pointer-events-none" />
-              <img
-                src="/images/hero/Turmeric.png"
-                alt="Manjal Podi (Turmeric Powder)"
-                className="w-full h-full object-contain filter drop-shadow-[0_15px_30px_rgba(0,0,0,0.2)] select-none pointer-events-none"
-              />
+              <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
+                <img src="/products/malli-podi.png" alt="Coriander pouch" className="h-full object-contain max-h-[85px]" />
+              </div>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Malli Podi</span>
+              <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">50g - 1kg</span>
             </motion.div>
 
-            {/* Coconut Oil Bottle (Center Foreground, Main Visual Focus + amber glow) */}
+            {/* Card 3: Manjal Podi (Bottom Left) */}
             <motion.div
-              className="absolute left-[13%] top-[4%] w-[72%] h-[88%] z-20 flex items-center justify-center"
-              animate={{
-                y: [0, -16, 0],
-                scale: [1, 1.05, 1],
-                rotate: [0, -2, 0],
-              }}
-              transition={{
-                duration: 6,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
+              animate={{ y: [0, -12, 0] }}
+              transition={{ duration: 4.5, delay: 0.2, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-2 left-12 z-10 w-[38%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
             >
-              {/* Soft warm glow */}
-              <div className="absolute inset-0 bg-coconut/20 rounded-full blur-3xl opacity-70 scale-75 pointer-events-none" />
-              <img
-                src="/images/hero/coconut.png"
-                alt="Velichenna (Coconut Oil)"
-                className="w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] select-none pointer-events-none"
-              />
+              <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
+                <img src="/products/manjal-podi.png" alt="Turmeric pouch" className="h-full object-contain max-h-[80px]" />
+              </div>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Manjal Podi</span>
+              <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">50g - 1kg</span>
             </motion.div>
-          </motion.div>
+
+            {/* Card 4: Coconut Oil (Bottom Right) */}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 5.2, delay: 0.8, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute bottom-8 right-12 z-10 w-[38%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
+            >
+              <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
+                <img src="/products/coconut-oil.png" alt="Coconut Oil Bottle" className="h-full object-contain max-h-[85px]" />
+              </div>
+              <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Coconut Oil</span>
+              <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">250ml - 5L</span>
+            </motion.div>
+
+          </div>
         </div>
+
       </div>
     </section>
   );

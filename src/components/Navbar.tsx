@@ -2,11 +2,21 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Leaf } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const getHref = (href: string) => {
+    if (href.startsWith("#")) {
+      return isHome ? href : `/${href}`;
+    }
+    return href;
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,10 +32,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", href: "#home" },
-    { name: "Our Products", href: "#products" },
-    { name: "Sourcing & Craft", href: "#process" },
-    { name: "Our Story", href: "#about" },
-    { name: "Why Us", href: "#why-choose-us" },
+    { name: "Products", href: "#products" },
+    { name: "About", href: "#about" },
     { name: "Contact", href: "#contact" },
   ];
 
@@ -37,20 +45,19 @@ export default function Navbar() {
         transition={{ duration: 0.5 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "py-3 bg-sand-50/80 backdrop-blur-md border-b border-turmeric/10 shadow-sm"
+            ? "py-3 bg-white/90 backdrop-blur-md border-b border-[#111111]/5 shadow-xs"
             : "py-5 bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="#home" className="flex items-center gap-2 group">
-              <div className="p-1.5 rounded-xl bg-gradient-to-br from-turmeric to-chilli text-white shadow-md">
-                <Leaf className="w-6 h-6 animate-pulse" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-cinnamon-950 font-serif">
-                KERALA <span className="text-turmeric">SPICES</span>
-              </span>
+            <a href={isHome ? "#home" : "/"} className="flex items-center group">
+              <img 
+                src="/images/jadeed-logo-transparent.svg" 
+                alt="JADEED Logo" 
+                className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-102" 
+              />
             </a>
 
             {/* Desktop Navigation */}
@@ -58,15 +65,15 @@ export default function Navbar() {
               {navLinks.map((link) => (
                 <a
                   key={link.name}
-                  href={link.href}
-                  className="text-sm font-medium text-cinnamon-900/80 hover:text-turmeric transition-colors duration-200"
+                  href={getHref(link.href)}
+                  className="text-xs font-bold uppercase tracking-widest text-[#111111]/75 hover:text-[#C89B3C] transition-colors duration-200"
                 >
                   {link.name}
                 </a>
               ))}
               <a
                 href="#contact"
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-turmeric to-chilli hover:from-chilli hover:to-turmeric rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
+                className="inline-flex items-center justify-center px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-[#111111] hover:bg-[#C89B3C] transition-colors duration-300"
               >
                 Enquire Now
               </a>
@@ -76,7 +83,7 @@ export default function Navbar() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="p-2 rounded-xl text-cinnamon-900 hover:bg-turmeric/5 transition-colors focus:outline-none"
+                className="p-2 text-[#111111] hover:text-[#C89B3C] transition-colors focus:outline-hidden"
               >
                 {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -92,15 +99,15 @@ export default function Navbar() {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden bg-sand-50/95 backdrop-blur-lg border-b border-turmeric/10 overflow-hidden"
+              className="md:hidden bg-white/95 backdrop-blur-lg border-b border-[#111111]/5 overflow-hidden"
             >
               <div className="px-4 pt-2 pb-6 space-y-3">
                 {navLinks.map((link) => (
                   <a
                     key={link.name}
-                    href={link.href}
+                    href={getHref(link.href)}
                     onClick={() => setIsOpen(false)}
-                    className="block px-3 py-2 rounded-lg text-base font-medium text-cinnamon-900/80 hover:bg-turmeric/5 hover:text-turmeric transition-all duration-200"
+                    className="block px-3 py-2 text-xs font-bold uppercase tracking-widest text-[#111111]/75 hover:text-[#C89B3C] transition-all duration-200"
                   >
                     {link.name}
                   </a>
@@ -109,7 +116,7 @@ export default function Navbar() {
                   <a
                     href="#contact"
                     onClick={() => setIsOpen(false)}
-                    className="block text-center w-full px-4 py-2.5 text-base font-semibold text-white bg-gradient-to-r from-turmeric to-chilli rounded-xl shadow-md"
+                    className="block text-center w-full px-4 py-3 text-xs font-bold uppercase tracking-wider text-white bg-[#111111] hover:bg-[#C89B3C] transition-colors duration-300"
                   >
                     Enquire Now
                   </a>

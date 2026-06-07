@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /product/
+Disallow: /api/
+Disallow: /search
+
+Sitemap: https://jadeedspices.com/sitemap.xml

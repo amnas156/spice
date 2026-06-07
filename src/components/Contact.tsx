@@ -1,315 +1,303 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { Phone, Mail, Clock, Send, CheckCircle } from "lucide-react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Phone, Mail, MapPin, Clock, Check, AlertCircle, Send } from "lucide-react";
 
-function ContactFormInner() {
-  const searchParams = useSearchParams();
+export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     phone: "",
-    product: "chilli",
-    weight: "250g",
-    message: "",
+    subject: "",
+    message: ""
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
-  useEffect(() => {
-    // Check if query params exist (e.g. from clicking "Enquire Now" on a card)
-    // Next.js searchParams handles this. But since it's a single page app,
-    // we can check if there are search params.
-    const productQuery = searchParams.get("product");
-    const weightQuery = searchParams.get("weight");
-    if (productQuery) {
-      setFormData((prev) => ({
-        ...prev,
-        product: productQuery,
-        weight: weightQuery || prev.weight,
-      }));
-    }
-  }, [searchParams]);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const getProductName = (id: string) => {
-    switch (id) {
-      case "chilli":
-        return "Mulaku Podi (Chilli Powder)";
-      case "turmeric":
-        return "Manjal Podi (Turmeric Powder)";
-      case "coriander":
-        return "Malli Podi (Coriander Powder)";
-      case "coconut":
-        return "Velichenna (Coconut Oil)";
-      default:
-        return "General Enquiry";
-    }
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setStatus("loading");
 
-    // Format WhatsApp Message
-    const whatsappNumber = "919876543210"; // Sample Kerala shop number
-    const prodName = getProductName(formData.product);
-    const text = `Hi Kerala Spices, I would like to place an enquiry:
+    // Simple client side validation
+    if (!formData.name || !formData.email || !formData.phone || !formData.subject || !formData.message) {
+      setTimeout(() => setStatus("error"), 600);
+      return;
+    }
+
+    // Construct WhatsApp message
+    const whatsappNumber = "919876543210";
+    const text = `Hi JADEED Spices, I have a contact enquiry:
 *Name:* ${formData.name}
+*Email:* ${formData.email}
 *Phone:* ${formData.phone}
-*Product:* ${prodName}
-*Weight/Qty:* ${formData.weight}
-*Message:* ${formData.message || "None"}`;
+*Subject:* ${formData.subject}
+*Message:* ${formData.message}`;
 
     const encodedText = encodeURIComponent(text);
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedText}`;
 
+    // Simulate sending, show success state, and redirect
     setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      // Open WhatsApp link
+      setStatus("success");
       window.open(whatsappUrl, "_blank");
 
       // Reset form
       setFormData({
         name: "",
+        email: "",
         phone: "",
-        product: "chilli",
-        weight: "250g",
-        message: "",
+        subject: "",
+        message: ""
       });
 
-      // Clear success state after 5 seconds
-      setTimeout(() => setIsSuccess(false), 5000);
+      // Revert status to idle after some time
+      setTimeout(() => setStatus("idle"), 4000);
     }, 1200);
   };
 
   return (
-    <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-cinnamon-900/5 relative">
-      {isSuccess && (
-        <div className="absolute inset-0 bg-white/95 rounded-3xl z-20 flex flex-col items-center justify-center text-center p-6 space-y-3">
-          <CheckCircle className="w-16 h-16 text-coriander animate-bounce" />
-          <h3 className="text-xl font-bold font-serif text-cinnamon-950">Enquiry Composed!</h3>
-          <p className="text-xs text-cinnamon-900/70 max-w-xs">
-            We have redirected you to WhatsApp to complete your enquiry. Our team will revert shortly with delivery charges.
-          </p>
-          <button
-            onClick={() => setIsSuccess(false)}
-            className="text-xs font-semibold text-turmeric underline hover:text-chilli"
-          >
-            Send Another Message
-          </button>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <h3 className="text-xl font-bold font-serif text-cinnamon-950">Quick Purchase Enquiry</h3>
-        <p className="text-xs text-cinnamon-900/60 leading-relaxed">
-          Select your desired products and quantities. Submitting this form opens WhatsApp to verify delivery pincodes and wholesale pricing.
-        </p>
-
-        {/* Name */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-cinnamon-950 uppercase tracking-wide">Your Name</label>
-          <input
-            type="text"
-            name="name"
-            required
-            placeholder="Enter your name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full px-4 py-2.5 rounded-xl border border-cinnamon-900/10 focus:border-turmeric focus:outline-hidden text-sm bg-sand-50/50"
-          />
-        </div>
-
-        {/* Phone */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-cinnamon-950 uppercase tracking-wide">Phone Number</label>
-          <input
-            type="tel"
-            name="phone"
-            required
-            placeholder="Enter 10 digit number"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full px-4 py-2.5 rounded-xl border border-cinnamon-900/10 focus:border-turmeric focus:outline-hidden text-sm bg-sand-50/50"
-          />
-        </div>
-
-        {/* Product Selection */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-cinnamon-950 uppercase tracking-wide">Select Product</label>
-            <select
-              name="product"
-              value={formData.product}
-              onChange={handleChange}
-              className="w-full px-3 py-2.5 rounded-xl border border-cinnamon-900/10 focus:border-turmeric focus:outline-hidden text-sm bg-sand-50/50"
-            >
-              <option value="chilli">Mulaku Podi (Chilli)</option>
-              <option value="turmeric">Manjal Podi (Turmeric)</option>
-              <option value="coriander">Malli Podi (Coriander)</option>
-              <option value="coconut">Velichenna (Coconut Oil)</option>
-            </select>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-cinnamon-950 uppercase tracking-wide">Weight/Size</label>
-            <select
-              name="weight"
-              value={formData.weight}
-              onChange={handleChange}
-              className="w-full px-3 py-2.5 rounded-xl border border-cinnamon-900/10 focus:border-turmeric focus:outline-hidden text-sm bg-sand-50/50"
-            >
-              {formData.product === "coconut" ? (
-                <>
-                  <option value="500ml">500ml</option>
-                  <option value="1 Litre">1 Litre</option>
-                  <option value="2 Litre">2 Litre</option>
-                  <option value="5 Litre">5 Litre</option>
-                </>
-              ) : (
-                <>
-                  <option value="100g">100g</option>
-                  <option value="250g">250g</option>
-                  <option value="500g">500g</option>
-                  <option value="1kg">1kg</option>
-                </>
-              )}
-            </select>
-          </div>
-        </div>
-
-        {/* Message */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-cinnamon-950 uppercase tracking-wide">Additional Notes (Optional)</label>
-          <textarea
-            name="message"
-            rows={3}
-            placeholder="Add delivery address or wholesale requests..."
-            value={formData.message}
-            onChange={handleChange}
-            className="w-full px-4 py-2.5 rounded-xl border border-cinnamon-900/10 focus:border-turmeric focus:outline-hidden text-sm bg-sand-50/50 resize-none"
-          />
-        </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-turmeric to-chilli hover:from-chilli hover:to-turmeric transition-all duration-300 shadow-md cursor-pointer disabled:opacity-50"
-        >
-          {isSubmitting ? (
-            <span>Redirecting to WhatsApp...</span>
-          ) : (
-            <>
-              <Send className="w-4 h-4" />
-              <span>Submit Enquiry via WhatsApp</span>
-            </>
-          )}
-        </button>
-      </form>
-    </div>
-  );
-}
-
-export default function Contact() {
-  return (
-    <section id="contact" className="py-24 relative overflow-hidden bg-sand-50">
-      {/* Glow */}
-      <div className="absolute top-1/4 right-0 w-96 h-96 glow-chilli rounded-full opacity-35 pointer-events-none" />
+    <section id="contact" className="py-16 sm:py-24 relative overflow-hidden bg-[#FAF6F0] border-t border-[#2C1A11]/5">
+      {/* Background Decorative Radial Glows */}
+      <div className="absolute top-1/3 left-0 w-[400px] h-[400px] bg-[#C89B3C]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#2C1A11]/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Form */}
-          <div className="lg:col-span-6">
-            <Suspense fallback={<div className="p-8 text-center text-xs text-cinnamon-900/50">Loading Enquiry System...</div>}>
-              <ContactFormInner />
-            </Suspense>
-          </div>
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+          <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#C89B3C]">
+            Get In Touch
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-serif font-medium tracking-wide text-[#2C1A11]">
+            Get In Touch
+          </h2>
+          <p className="text-xs sm:text-sm text-[#2C1A11]/60 leading-relaxed font-sans max-w-xl mx-auto font-medium">
+            We would love to hear from you. Contact us for orders, wholesale enquiries, product information, and customer support.
+          </p>
+        </div>
 
-          {/* Right Column: Address and Styled Visual Map */}
-          <div className="lg:col-span-6 space-y-8">
-            <div className="space-y-4">
-              <span className="text-sm font-semibold tracking-wider text-turmeric uppercase">Get In Touch</span>
-              <h2 className="text-3xl sm:text-4xl font-bold font-serif text-cinnamon-950">
-                Taste the Purity of Kerala
-              </h2>
-              <p className="text-sm text-cinnamon-900/70 leading-relaxed">
-                Have questions about custom orders, shipping outside Kerala, or wholesale dealership packages? Contact us directly or visit our grinding unit in Wayanad.
-              </p>
+        {/* 50/50 Grid Container */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-stretch">
+          
+          {/* LEFT SIDE (50%): Large Google Maps Embed */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-6 flex flex-col order-1"
+          >
+            <div className="w-full flex-1 min-h-[300px] sm:min-h-[400px] lg:min-h-none h-full bg-white border border-[#2C1A11]/5 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 relative p-2">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3909.117180126588!2d76.20487741481504!3d11.234335391997236!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba63a48ab459219%3A0x3f865860de7e8960!2sJADEED%20RICE%20AND%20FLOUR%20MILL!5e0!3m2!1sen!2sin!4v1655000000000!5m2!1sen!2sin" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0, borderRadius: "1.25rem" }} 
+                allowFullScreen={true} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                className="filter grayscale-[20%] contrast-[90%] brightness-[98%]"
+              />
             </div>
+          </motion.div>
 
-            {/* Quick Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="bg-white rounded-2xl p-4 border border-cinnamon-900/5 flex flex-col items-center text-center space-y-2">
-                <div className="p-2.5 bg-turmeric/10 rounded-xl text-turmeric">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div className="space-y-0.5">
-                  <span className="block text-[10px] uppercase font-bold text-cinnamon-900/40">Call Us</span>
-                  <span className="text-xs font-bold text-cinnamon-950">+91 98765 43210</span>
-                </div>
-              </div>
+          {/* RIGHT SIDE (50%): Contact Form & Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-6 flex flex-col justify-between space-y-8 order-2"
+          >
+            {/* Contact Form Wrapper */}
+            <div className="bg-white border border-[#2C1A11]/5 rounded-3xl p-8 shadow-xs relative overflow-hidden">
+              
+              {/* Success/Error overlays */}
+              <AnimatePresence>
+                {status === "success" && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center text-center p-6 space-y-4"
+                  >
+                    <div className="bg-[#C89B3C]/10 text-[#C89B3C] border border-[#C89B3C]/20 rounded-full p-3 flex items-center justify-center">
+                      <Check className="w-8 h-8 stroke-[2.5px]" />
+                    </div>
+                    <h4 className="text-xl font-serif font-medium text-[#2C1A11]">Message Formatted!</h4>
+                    <p className="text-xs text-[#2C1A11]/60 max-w-xs leading-relaxed font-medium">
+                      Redirecting to WhatsApp to submit your request directly to our customer support desk.
+                    </p>
+                  </motion.div>
+                )}
 
-              <div className="bg-white rounded-2xl p-4 border border-cinnamon-900/5 flex flex-col items-center text-center space-y-2">
-                <div className="p-2.5 bg-chilli/10 rounded-xl text-chilli">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <div className="space-y-0.5">
-                  <span className="block text-[10px] uppercase font-bold text-cinnamon-900/40">Email Us</span>
-                  <span className="text-xs font-bold text-cinnamon-950">enquire@keralaspiceco.com</span>
-                </div>
-              </div>
+                {status === "error" && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 bg-white/95 z-20 flex flex-col items-center justify-center text-center p-6 space-y-4"
+                  >
+                    <div className="bg-red-50 text-red-600 border border-red-200 rounded-full p-3 flex items-center justify-center">
+                      <AlertCircle className="w-8 h-8" />
+                    </div>
+                    <h4 className="text-xl font-serif font-medium text-red-700">Submission Error</h4>
+                    <p className="text-xs text-[#2C1A11]/60 max-w-xs leading-relaxed font-medium">
+                      Please make sure all form fields are filled out correctly before sending.
+                    </p>
+                    <button
+                      onClick={() => setStatus("idle")}
+                      className="text-xs font-bold uppercase tracking-widest text-[#2C1A11] underline hover:text-[#C89B3C]"
+                    >
+                      Try Again
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              <div className="bg-white rounded-2xl p-4 border border-cinnamon-900/5 flex flex-col items-center text-center space-y-2">
-                <div className="p-2.5 bg-coriander/10 rounded-xl text-coriander">
-                  <Clock className="w-5 h-5" />
-                </div>
-                <div className="space-y-0.5">
-                  <span className="block text-[10px] uppercase font-bold text-cinnamon-900/40">Working Hours</span>
-                  <span className="text-[10px] font-bold text-cinnamon-950">08:00 AM - 07:00 PM</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Premium Styled Map Placeholder Dashboard */}
-            <div className="bg-cinnamon-950 text-white rounded-3xl p-6 relative overflow-hidden border border-white/5 shadow-inner select-none">
-              <div className="absolute inset-0 bg-radial from-turmeric/15 to-transparent pointer-events-none" />
-              <div className="relative z-10 space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-bold text-turmeric uppercase tracking-widest">Milling & Packaging Unit</span>
-                  <span className="text-[10px] font-semibold text-white/50">Wayanad, Kerala</span>
-                </div>
-
-                {/* Styled CSS Map Grid */}
-                <div className="h-36 rounded-2xl bg-black/30 border border-white/10 relative overflow-hidden flex items-center justify-center">
-                  {/* Grid Lines */}
-                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:14px_24px]" />
-                  {/* Circle sonar pulses */}
-                  <div className="absolute w-24 h-24 rounded-full border border-turmeric/20 animate-ping opacity-60" />
-                  <div className="absolute w-12 h-12 rounded-full border border-turmeric/30 animate-pulse" />
-                  {/* Map Pin Marker */}
-                  <div className="relative flex flex-col items-center">
-                    <span className="text-2xl animate-bounce">📍</span>
-                    <span className="text-[9px] uppercase tracking-wider font-bold bg-turmeric text-white px-2 py-0.5 rounded shadow-sm">
-                      Kerala Spices Co.
-                    </span>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {/* 2-column input row for Name & Email */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/50">Full Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      required
+                      placeholder="Your Name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-[#2C1A11]/10 focus:border-[#C89B3C] focus:outline-hidden text-xs bg-transparent rounded-none transition-colors"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/50">Email Address</label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      placeholder="name@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-[#2C1A11]/10 focus:border-[#C89B3C] focus:outline-hidden text-xs bg-transparent rounded-none transition-colors"
+                    />
                   </div>
                 </div>
 
-                <div className="text-[11px] text-white/70 leading-relaxed text-center">
-                  Address: Harvest House, Spice Road, Kalpetta, Wayanad, Kerala, 673121 <br />
-                  <span className="text-[10px] text-turmeric-light font-bold">Coordinates: 11.6102° N, 76.0827° E</span>
+                {/* 2-column input row for Phone & Subject */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/50">Phone Number</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      placeholder="+91 98765 43210"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-[#2C1A11]/10 focus:border-[#C89B3C] focus:outline-hidden text-xs bg-transparent rounded-none transition-colors"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/50">Subject</label>
+                    <input
+                      type="text"
+                      name="subject"
+                      required
+                      placeholder="e.g. Wholesale Enquiry"
+                      value={formData.subject}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-[#2C1A11]/10 focus:border-[#C89B3C] focus:outline-hidden text-xs bg-transparent rounded-none transition-colors"
+                    />
+                  </div>
+                </div>
+
+                {/* Message Textarea */}
+                <div className="space-y-1.5">
+                  <label className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/50">Message</label>
+                  <textarea
+                    name="message"
+                    required
+                    rows={4}
+                    placeholder="Tell us what you need..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-[#2C1A11]/10 focus:border-[#C89B3C] focus:outline-hidden text-xs bg-transparent rounded-none resize-none transition-colors"
+                  />
+                </div>
+
+                {/* Submit button with micro-interactions */}
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className="w-full py-4 bg-black hover:bg-[#C89B3C] text-white text-[10px] font-bold uppercase tracking-widest transition-all duration-300 shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  {status === "loading" ? "Formatting Message..." : "Send Message"}
+                </button>
+              </form>
+            </div>
+
+            {/* Direct Contact Details Block */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-white border border-[#2C1A11]/5 rounded-2xl p-5 flex items-start gap-4">
+                <div className="p-2.5 bg-[#FAF6F0] rounded-xl text-[#C89B3C] shrink-0">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div className="space-y-1">
+                  <span className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/40 leading-none">Phone Number</span>
+                  <span className="text-xs font-bold text-[#2C1A11] block">+91 98765 43210</span>
+                </div>
+              </div>
+
+              <div className="bg-white border border-[#2C1A11]/5 rounded-2xl p-5 flex items-start gap-4">
+                <div className="p-2.5 bg-[#FAF6F0] rounded-xl text-[#C89B3C] shrink-0">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div className="space-y-1">
+                  <span className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/40 leading-none">Email Address</span>
+                  <span className="text-xs font-bold text-[#2C1A11] block truncate">enquire@jadeed.com</span>
+                </div>
+              </div>
+
+              <div className="bg-white border border-[#2C1A11]/5 rounded-2xl p-5 flex items-start gap-4">
+                <div className="p-2.5 bg-[#FAF6F0] rounded-xl text-[#C89B3C] shrink-0">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div className="space-y-1">
+                  <span className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/40 leading-none">Business Address</span>
+                  <span className="text-[10px] font-bold text-[#2C1A11] block leading-normal">
+                    JADEED RICE &amp; FLOUR MILL, Chirakkal, Kuttumunda, Naduvath, Kerala 679328
+                  </span>
+                  <span className="block text-[8px] text-[#C89B3C]/80 font-mono">
+                    Coordinates: 11.2343° N, 76.2071° E
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-white border border-[#2C1A11]/5 rounded-2xl p-5 flex items-start gap-4">
+                <div className="p-2.5 bg-[#FAF6F0] rounded-xl text-[#C89B3C] shrink-0">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div className="space-y-1">
+                  <span className="block text-[8px] font-bold uppercase tracking-widest text-[#2C1A11]/40 leading-none">Working Hours</span>
+                  <span className="text-xs font-bold text-[#2C1A11] block">
+                    08:00 AM - 07:00 PM (IST)
+                  </span>
                 </div>
               </div>
             </div>
-          </div>
+
+          </motion.div>
+
         </div>
+
       </div>
     </section>
   );
