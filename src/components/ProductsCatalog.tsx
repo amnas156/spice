@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Check, ShoppingCart, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { productsData, Product, ProductVariant } from "@/lib/products";
 import { cn } from "@/lib/utils";
@@ -153,9 +154,11 @@ export default function ProductsCatalog() {
 
                   {/* Image container frame */}
                   <div className="relative w-full max-w-[420px] aspect-[4/5] bg-[#FAF6F0]/50 border border-[#2C1A11]/5 rounded-3xl p-8 flex items-center justify-center overflow-hidden shadow-xs hover:shadow-lg group transition-all duration-300">
-                    <img
+                    <Image
                       src={activeImage}
                       alt={`JADEED ${product.name} Showcase`}
+                      width={600}
+                      height={800}
                       className="w-full h-full object-contain max-h-[350px] transition-transform duration-700 group-hover:scale-105 select-none"
                     />
                     

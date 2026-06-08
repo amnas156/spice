@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Check, ArrowRight, Star, ShoppingBag, Users, Store, ShieldCheck } from "lucide-react";
 import SpiceParticles from "./SpiceParticles";
@@ -100,7 +101,7 @@ export default function Hero() {
               className="absolute top-2 left-2 z-10 w-[42%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
             >
               <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
-                <img src="/products/mulaku-podi.png" alt="Chilli pouch" className="h-full object-contain max-h-[90px]" />
+                <Image src="/products/mulaku-podi.png" alt="Chilli pouch" width={300} height={400} className="w-full h-full object-contain max-h-[90px]" priority />
               </div>
               <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Mulaku Podi</span>
               <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">50g - 1kg</span>
@@ -113,7 +114,7 @@ export default function Hero() {
               className="absolute top-8 right-2 z-10 w-[40%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
             >
               <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
-                <img src="/products/malli-podi.png" alt="Coriander pouch" className="h-full object-contain max-h-[85px]" />
+                <Image src="/products/malli-podi.png" alt="Coriander pouch" width={300} height={400} className="w-full h-full object-contain max-h-[85px]" priority />
               </div>
               <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Malli Podi</span>
               <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">50g - 1kg</span>
@@ -126,7 +127,7 @@ export default function Hero() {
               className="absolute bottom-2 left-12 z-10 w-[38%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
             >
               <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
-                <img src="/products/manjal-podi.png" alt="Turmeric pouch" className="h-full object-contain max-h-[80px]" />
+                <Image src="/products/manjal-podi.png" alt="Turmeric pouch" width={300} height={400} className="w-full h-full object-contain max-h-[80px]" priority />
               </div>
               <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Manjal Podi</span>
               <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">50g - 1kg</span>
@@ -139,7 +140,7 @@ export default function Hero() {
               className="absolute bottom-8 right-12 z-10 w-[38%] bg-white/60 backdrop-blur-md border border-white/20 p-3 rounded-2xl shadow-lg hover:shadow-xl hover:scale-102 hover:z-20 transition-all duration-300 flex flex-col items-center select-none"
             >
               <div className="w-full aspect-square bg-[#FAF6F0]/30 rounded-xl p-2 flex items-center justify-center overflow-hidden mb-2">
-                <img src="/products/coconut-oil.png" alt="Coconut Oil Bottle" className="h-full object-contain max-h-[85px]" />
+                <Image src="/products/coconut-oil.png" alt="Coconut Oil Bottle" width={300} height={400} className="w-full h-full object-contain max-h-[85px]" priority />
               </div>
               <span className="text-[9px] font-bold uppercase tracking-widest text-[#2C1A11] block text-center">Coconut Oil</span>
               <span className="text-[7px] font-bold text-[#C89B3C] uppercase tracking-wider block text-center mt-0.5">250ml - 5L</span>

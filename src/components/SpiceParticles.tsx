@@ -20,6 +20,12 @@ export default function SpiceParticles() {
   const mouseRef = useRef({ x: -1000, y: -1000, active: false });
 
   useEffect(() => {
+    // Disable particles entirely on mobile devices (< 768px) to conserve battery
+    // and ensure a smooth 60 FPS scrolling experience.
+    if (window.innerWidth < 768) {
+      return;
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 

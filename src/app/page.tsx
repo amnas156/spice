@@ -1,10 +1,12 @@
 import React from "react";
+import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import ProductsCatalog from "@/components/ProductsCatalog";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+
+const ProductsCatalog = dynamic(() => import("@/components/ProductsCatalog"));
+const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
+const Contact = dynamic(() => import("@/components/Contact"));
+const Footer = dynamic(() => import("@/components/Footer"));
 
 export default function Home() {
   return (
