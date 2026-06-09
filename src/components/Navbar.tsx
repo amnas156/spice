@@ -1,131 +1,101 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { siteConfig } from "@/config/site";
+import { LinkButton } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  const getHref = (href: string) => {
-    if (href.startsWith("#")) {
-      return isHome ? href : `/${href}`;
-    }
-    return href;
-  };
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "Products", href: "#products" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#contact" },
-  ];
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  const resolveHref = (href: string) => {
+    if (!href.startsWith("#")) return href;
+    return isHome ? href : `/${href}`;
+  };
 
   return (
-    <>
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "py-3 bg-white/90 backdrop-blur-md border-b border-[#111111]/5 shadow-xs"
-            : "py-5 bg-transparent"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <a href={isHome ? "#home" : "/"} className="flex items-center group">
-              <img 
-                src="/images/jadeed-logo-transparent.svg" 
-                alt="JADEED Logo" 
-                className="h-8 sm:h-9 w-auto transition-transform duration-300 group-hover:scale-102" 
-              />
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 border-b transition duration-200",
+        isScrolled || isOpen
+          ? "border-charcoal/10 bg-paper/90 shadow-sm backdrop-blur-xl"
+          : "border-transparent bg-paper/0",
+      )}
+    >
+      <nav className="container-page flex h-20 items-center justify-between" aria-label="Primary">
+        <a href={isHome ? "#home" : "/"} className="inline-flex items-center">
+          <Image
+            src="/images/jadeed-logo-transparent.svg"
+            alt={`${siteConfig.name} home`}
+            width={124}
+            height={38}
+            priority
+            className="h-9 w-auto"
+          />
+        </a>
+
+        <div className="hidden items-center gap-8 md:flex">
+          {siteConfig.nav.map((link) => (
+            <a
+              key={link.href}
+              href={resolveHref(link.href)}
+              className="text-xs font-bold uppercase tracking-[0.2em] text-charcoal/70 transition hover:text-gold"
+            >
+              {link.label}
             </a>
-
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={getHref(link.href)}
-                  className="text-xs font-bold uppercase tracking-widest text-[#111111]/75 hover:text-[#C89B3C] transition-colors duration-200"
-                >
-                  {link.name}
-                </a>
-              ))}
-              <a
-                href="#contact"
-                className="inline-flex items-center justify-center px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-[#111111] hover:bg-[#C89B3C] transition-colors duration-300"
-              >
-                Enquire Now
-              </a>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-2 text-[#111111] hover:text-[#C89B3C] transition-colors focus:outline-hidden"
-              >
-                {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
-          </div>
+          ))}
+          <LinkButton href={resolveHref("#contact")} className="min-h-10 px-4 py-2">
+            Enquire
+          </LinkButton>
         </div>
 
-        {/* Mobile dropdown */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden bg-white/95 backdrop-blur-lg border-b border-[#111111]/5 overflow-hidden"
-            >
-              <div className="px-4 pt-2 pb-6 space-y-3">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={getHref(link.href)}
-                    onClick={() => setIsOpen(false)}
-                    className="block px-3 py-2 text-xs font-bold uppercase tracking-widest text-[#111111]/75 hover:text-[#C89B3C] transition-all duration-200"
-                  >
-                    {link.name}
-                  </a>
-                ))}
-                <div className="px-3 pt-2">
-                  <a
-                    href="#contact"
-                    onClick={() => setIsOpen(false)}
-                    className="block text-center w-full px-4 py-3 text-xs font-bold uppercase tracking-wider text-white bg-[#111111] hover:bg-[#C89B3C] transition-colors duration-300"
-                  >
-                    Enquire Now
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.nav>
-    </>
+        <button
+          type="button"
+          className="inline-flex h-11 w-11 items-center justify-center border border-charcoal/10 bg-white text-charcoal md:hidden"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((value) => !value)}
+        >
+          {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </nav>
+
+      {isOpen ? (
+        <div className="border-t border-charcoal/10 bg-paper md:hidden">
+          <div className="container-page grid gap-2 py-4">
+            {siteConfig.nav.map((link) => (
+              <a
+                key={link.href}
+                href={resolveHref(link.href)}
+                className="px-1 py-3 text-sm font-bold uppercase tracking-[0.18em] text-charcoal/75"
+                onClick={() => setIsOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+            <LinkButton href={resolveHref("#contact")} onClick={() => setIsOpen(false)}>
+              Enquire Now
+            </LinkButton>
+          </div>
+        </div>
+      ) : null}
+    </header>
   );
 }

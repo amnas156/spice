@@ -3,6 +3,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductDetailClient from "@/components/ProductDetailClient";
 import { productsData } from "@/lib/products";
+import { siteConfig } from "@/config/site";
+import { getProductImage } from "@/lib/commerce";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -12,8 +14,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { id } = await params;
   const product = productsData.find((p) => p.id === id) || productsData[0];
   
-  const siteUrl = "https://jadeedspices.com";
-  const ogImage = product.variants[2]?.image || product.variants[0]?.image || "";
+  const siteUrl = siteConfig.url;
+  const ogImage = getProductImage(product, product.variants[2] ?? product.variants[0]);
   
   return {
     title: `JADEED ${product.name} (${product.malayalam})`,
@@ -29,9 +31,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       type: "article",
       url: `${siteUrl}/product/${product.id}`,
-      title: `JADEED ${product.name} (${product.malayalam}) | JADEED Spices & Oil`,
+      title: `JADEED ${product.name} (${product.malayalam}) | ${siteConfig.name}`,
       description: product.description,
-      siteName: "JADEED Spices & Oil",
+      siteName: siteConfig.name,
       images: [
         {
           url: ogImage,
@@ -43,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: `JADEED ${product.name} (${product.malayalam}) | JADEED Spices & Oil`,
+      title: `JADEED ${product.name} (${product.malayalam}) | ${siteConfig.name}`,
       description: product.description,
       images: [ogImage],
     },
@@ -54,8 +56,8 @@ export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
   const product = productsData.find((p) => p.id === id) || productsData[0];
 
-  const siteUrl = "https://jadeedspices.com";
-  const mainImage = product.variants[2]?.image || product.variants[0]?.image || "";
+  const siteUrl = siteConfig.url;
+  const mainImage = getProductImage(product, product.variants[2] ?? product.variants[0]);
 
   // Structured JSON-LD Product Data
   const productSchema = {
@@ -93,7 +95,7 @@ export default async function ProductPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
       <Navbar />
-      <main className="min-h-screen pt-28 pb-20 bg-[#FAF6F0] font-sans antialiased text-[#2C1A11]">
+      <main id="main-content" className="min-h-screen bg-cream pt-28 pb-20 font-sans antialiased text-charcoal">
         <ProductDetailClient product={product} />
       </main>
       <Footer />

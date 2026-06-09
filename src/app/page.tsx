@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <>
       <Navbar />
-      <main className="flex-1 flex flex-col">
+      <main id="main-content" className="flex flex-1 flex-col">
         <Hero />
         <ProductsCatalog />
         <WhyChooseUs />

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
+import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,12 +14,12 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://jadeedspices.com"),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: "JADEED Spices & Oil | Pure Traditional Kerala Spices",
-    template: "%s | JADEED Spices & Oil"
+    default: `${siteConfig.name} | Pure Traditional Kerala Spices`,
+    template: `%s | ${siteConfig.name}`,
   },
-  description: "Sourcing the highest quality Turmeric Powder, Chilli Powder, Coriander Powder, and Cold-Pressed Coconut Oil (Velichenna) from organic farms in Wayanad and Idukki, Kerala.",
+  description: siteConfig.description,
   keywords: ["JADEED Spices", "Kerala Spices", "Velichenna", "Chilli Powder", "Turmeric Powder", "Coriander Powder", "Wayanad Spices", "Pure Coconut Oil Kerala"],
   robots: {
     index: true,
@@ -34,10 +35,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://jadeedspices.com",
-    title: "JADEED Spices & Oil | Pure Traditional Kerala Spices",
-    description: "Sourcing the highest quality Turmeric, Chilli, Coriander Powder, and Cold-Pressed Coconut Oil (Velichenna) from organic farms in Wayanad and Idukki, Kerala.",
-    siteName: "JADEED Spices & Oil",
+    url: siteConfig.url,
+    title: `${siteConfig.name} | Pure Traditional Kerala Spices`,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
     images: [
       {
         url: "/products/mulaku-podi.png",
@@ -49,8 +50,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "JADEED Spices & Oil | Pure Traditional Kerala Spices",
-    description: "Sourcing the highest quality Turmeric, Chilli, Coriander Powder, and Cold-Pressed Coconut Oil (Velichenna) from organic farms in Wayanad and Idukki, Kerala.",
+    title: `${siteConfig.name} | Pure Traditional Kerala Spices`,
+    description: siteConfig.description,
     images: ["/products/mulaku-podi.png"],
   },
 };
@@ -63,11 +64,11 @@ export default function RootLayout({
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": "https://jadeedspices.com/#organization",
-    "name": "JADEED Spices & Oil",
-    "url": "https://jadeedspices.com",
-    "logo": "https://jadeedspices.com/images/jadeed-logo.svg",
-    "image": "https://jadeedspices.com/products/mulaku-podi.png",
+    "@id": `${siteConfig.url}/#organization`,
+    "name": siteConfig.name,
+    "url": siteConfig.url,
+    "logo": `${siteConfig.url}/images/jadeed-logo-transparent.svg`,
+    "image": `${siteConfig.url}/products/mulaku-podi.png`,
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Chirakkal, Kuttumunda, Naduvath",
@@ -78,9 +79,9 @@ export default function RootLayout({
     },
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+91-98765-43210",
+      "telephone": siteConfig.phone,
       "contactType": "customer service",
-      "email": "enquire@jadeed.com",
+      "email": siteConfig.email,
       "availableLanguage": ["English", "Malayalam", "Hindi"]
     }
   };
@@ -88,12 +89,12 @@ export default function RootLayout({
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": "https://jadeedspices.com/#website",
-    "url": "https://jadeedspices.com",
-    "name": "JADEED Spices & Oil",
-    "description": "Pure Traditional Kerala Spices & Cold-Pressed Oils",
+    "@id": `${siteConfig.url}/#website`,
+    "url": siteConfig.url,
+    "name": siteConfig.name,
+    "description": siteConfig.description,
     "publisher": {
-      "@id": "https://jadeedspices.com/#organization"
+      "@id": `${siteConfig.url}/#organization`
     }
   };
 
@@ -102,7 +103,8 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-sand-50 text-cinnamon-950 overflow-x-hidden w-full">
+      <body className="flex min-h-full w-full flex-col overflow-x-hidden bg-cream text-charcoal">
+        <a className="skip-link" href="#main-content">Skip to content</a>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
