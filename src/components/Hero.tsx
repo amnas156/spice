@@ -58,19 +58,7 @@ export default function Hero() {
             priority
             className="col-span-2 aspect-[16/11] p-7 sm:p-10"
           />
-          {heroProducts.slice(1).map((product, index) =>
-            product ? (
-              <div key={product.id} className={index === 1 ? "animate-float-soft" : undefined}>
-                <ProductMedia
-                  product={product}
-                  src={product.variants[0].image.startsWith("/") ? product.variants[0].image : `/products/${product.id === "velichenna" ? "coconut-oil" : product.id}.png`}
-                  alt={`JADEED ${product.name}`}
-                  className="aspect-square p-4"
-                  imageClassName="max-h-40"
-                />
-              </div>
-            ) : null,
-          )}
+          
         </div>
       </div>
     </section>
