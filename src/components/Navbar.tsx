@@ -21,10 +21,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setIsOpen(false);
-  }, [pathname]);
-
+  }
   const resolveHref = (href: string) => {
     if (!href.startsWith("#")) return href;
     return isHome ? href : `/${href}`;
