@@ -21,6 +21,7 @@ export default function ScrollShowcase({ children }: { children: React.ReactNode
 
   useEffect(() => {
     let resizeTimeout: NodeJS.Timeout;
+    const mm = gsap.matchMedia();
 
     const initAnimations = () => {
       // 1. Clean up existing ScrollTrigger and timeline
@@ -89,22 +90,22 @@ export default function ScrollShowcase({ children }: { children: React.ReactNode
           // Mobile layout: Velichenna centered at top, 3 spices in horizontal row below it, no overlap
           if (p.id === "velichenna") { // Bottle
             xHero = X_hero_center - w / 2;
-            yHero = Y_hero_center - h / 2 - 70;
-            scaleHero = 0.52;
+            yHero = Y_hero_center - h / 2 - 50;
+            scaleHero = 0.50;
             zIndex = 20;
           } else if (p.id === "mulaku-podi") { // Left spice pack
-            xHero = X_hero_center - w / 2 - 85;
-            yHero = Y_hero_center - h / 2 + 55;
+            xHero = X_hero_center - w / 2 - 80;
+            yHero = Y_hero_center - h / 2 + 50;
             scaleHero = 0.38;
             zIndex = 10;
           } else if (p.id === "malli-podi") { // Center spice pack
             xHero = X_hero_center - w / 2;
-            yHero = Y_hero_center - h / 2 + 55;
+            yHero = Y_hero_center - h / 2 + 50;
             scaleHero = 0.38;
             zIndex = 10;
           } else { // Right spice pack (manjal-podi)
-            xHero = X_hero_center - w / 2 + 85;
-            yHero = Y_hero_center - h / 2 + 55;
+            xHero = X_hero_center - w / 2 + 80;
+            yHero = Y_hero_center - h / 2 + 50;
             scaleHero = 0.38;
             zIndex = 10;
           }
@@ -156,97 +157,112 @@ export default function ScrollShowcase({ children }: { children: React.ReactNode
         return;
       }
 
-      // Create GSAP ScrollTrigger timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: container,
-          start: "top top",
-          end: () => catalogEl ? `bottom bottom` : "bottom bottom",
-          endTrigger: catalogEl || undefined,
-          scrub: 1.2, // Premium Apple-style scrub easing
-          invalidateOnRefresh: true,
-        },
-      });
+      // Add matchMedia bindings
+      mm.add({
+        isDesktop: "(min-width: 1024px)",
+        isMobile: "(max-width: 1023px)"
+      }, (context) => {
+        const { isDesktop } = context.conditions as any;
 
-      tl.duration(L);
+        // Apply initial values and trigger bobbing on both desktop & mobile
+        placeholders.forEach((ph, idx) => {
+          if (!ph) return;
+          const imgEl = container.querySelector(`[data-animate-id="${ph.id}"]`);
+          if (!imgEl) return;
 
-      // Add tweens for each image
-      placeholders.forEach((ph, idx) => {
-        if (!ph) return;
-        const imgEl = container.querySelector(`[data-animate-id="${ph.id}"]`);
-        if (!imgEl) return;
+          gsap.set(imgEl, {
+            width: ph.w,
+            height: ph.h,
+            x: ph.xHero,
+            y: ph.yHero,
+            scale: ph.scaleHero,
+            opacity: 1,
+            zIndex: ph.zIndex,
+            transformOrigin: "center center",
+          });
 
-        // Reset and apply initial states
-        gsap.set(imgEl, {
-          width: ph.w,
-          height: ph.h,
-          x: ph.xHero,
-          y: ph.yHero,
-          scale: ph.scaleHero,
-          opacity: 1,
-          zIndex: ph.zIndex,
-          transformOrigin: "center center",
+          // Bobbing/floating animation
+          const floatEl = container.querySelector(`[data-float-id="${ph.id}"]`);
+          if (floatEl) {
+            gsap.killTweensOf(floatEl);
+            gsap.to(floatEl, {
+              y: "-=12",
+              rotation: idx % 2 === 0 ? 1.5 : -1.5,
+              duration: 2.2 + idx * 0.4,
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut",
+            });
+          }
         });
 
-        // Independent micro-floating/rotation bob animation on the inner div
-        const floatEl = container.querySelector(`[data-float-id="${ph.id}"]`);
-        if (floatEl) {
-          gsap.killTweensOf(floatEl); // Avoid overlay tweens on resize
-          gsap.to(floatEl, {
-            y: "-=12",
-            rotation: idx % 2 === 0 ? 1.5 : -1.5,
-            duration: 2.2 + idx * 0.4,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
+        if (isDesktop) {
+          // Create ScrollTrigger timeline on desktop only
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: container,
+              start: "top top",
+              end: () => catalogEl ? `bottom bottom` : "bottom bottom",
+              endTrigger: catalogEl || undefined,
+              scrub: 1.2,
+              invalidateOnRefresh: true,
+            },
           });
-        }
 
-        // 1. Scroll with Hero section from 0 to sStart
-        if (ph.sStart > 0) {
-          tl.to(
-            imgEl,
-            {
-              y: ph.yHero - ph.sStart,
-              ease: "none",
-              duration: ph.sStart,
-            },
-            0
-          );
-        }
+          tl.duration(L);
 
-        // 2. Travel phase from sStart to sLock (smoothly moves to lock position)
-        const travelDuration = ph.sLock - ph.sStart;
-        tl.to(
-          imgEl,
-          {
-            x: ph.xTarget,
-            y: ph.yLock,
-            scale: 1.0,
-            ease: "power2.inOut", // Smooth transition easing
-            duration: travelDuration,
-          },
-          ph.sStart
-        );
+          placeholders.forEach((ph) => {
+            if (!ph) return;
+            const imgEl = container.querySelector(`[data-animate-id="${ph.id}"]`);
+            if (!imgEl) return;
 
-        // 3. Locked phase from sLock to L (scrolls up naturally with the section)
-        if (L > ph.sLock) {
-          tl.to(
-            imgEl,
-            {
-              y: ph.yLock - (L - ph.sLock),
-              ease: "none",
-              duration: L - ph.sLock,
-            },
-            ph.sLock
-          );
+            // 1. Scroll with Hero section
+            if (ph.sStart > 0) {
+              tl.to(
+                imgEl,
+                {
+                  y: ph.yHero - ph.sStart,
+                  ease: "none",
+                  duration: ph.sStart,
+                },
+                0
+              );
+            }
+
+            // 2. Travel phase
+            const travelDuration = ph.sLock - ph.sStart;
+            tl.to(
+              imgEl,
+              {
+                x: ph.xTarget,
+                y: ph.yLock,
+                scale: 1.0,
+                ease: "power2.inOut",
+                duration: travelDuration,
+              },
+              ph.sStart
+            );
+
+            // 3. Locked phase
+            if (L > ph.sLock) {
+              tl.to(
+                imgEl,
+                {
+                  y: ph.yLock - (L - ph.sLock),
+                  ease: "none",
+                  duration: L - ph.sLock,
+                },
+                ph.sLock
+              );
+            }
+          });
+
+          tlRef.current = tl;
         }
       });
-
-      tlRef.current = tl;
     };
 
-    // Fade in the product group container on mount
+    // Fade in overlay on load
     if (overlayRef.current) {
       gsap.to(overlayRef.current, {
         opacity: 1,
@@ -256,7 +272,6 @@ export default function ScrollShowcase({ children }: { children: React.ReactNode
       });
     }
 
-    // Delay initialization slightly to allow Next.js DOM and layout to settle
     const initialTimeout = setTimeout(() => {
       initAnimations();
     }, 250);
@@ -273,6 +288,8 @@ export default function ScrollShowcase({ children }: { children: React.ReactNode
       clearTimeout(resizeTimeout);
       window.removeEventListener("resize", handleResize);
       
+      mm.revert();
+      
       if (tlRef.current) {
         tlRef.current.kill();
       }
@@ -283,7 +300,6 @@ export default function ScrollShowcase({ children }: { children: React.ReactNode
         }
       });
 
-      // Clean up floating animations
       products.forEach((p) => {
         const floatEl = document.querySelector(`[data-float-id="${p.id}"]`);
         if (floatEl) {
@@ -295,12 +311,13 @@ export default function ScrollShowcase({ children }: { children: React.ReactNode
 
   return (
     <div ref={containerRef} className="relative w-full">
-      {/* Absolute overlay wrapper for sticky images - opacity: 0 initially for fade-in entrance */}
+      {/* Absolute overlay wrapper for images */}
       <div 
         ref={overlayRef} 
         className="absolute top-0 left-0 w-full h-full pointer-events-none z-20 opacity-0"
       >
-        <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
+        {/* On mobile it is absolute (scrolls with page), on desktop it is sticky top-0 h-screen */}
+        <div className="absolute lg:sticky top-0 left-0 w-full h-[280px] sm:h-[320px] lg:h-screen overflow-hidden">
           <div className="relative w-full h-full">
             {products.map((product) => (
               <div

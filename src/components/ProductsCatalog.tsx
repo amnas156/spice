@@ -80,7 +80,7 @@ export default function ProductsCatalog() {
                     src={product.id === "mulaku-podi" ? getProductImage(product, selectedVariant) : activeImage}
                     alt={`JADEED ${product.name}`}
                     className="w-full"
-                    imageClassName={isMounted ? "opacity-0 transition-opacity duration-300" : ""}
+                    imageClassName={isMounted ? "lg:opacity-0 transition-opacity duration-300" : ""}
                   />
                 </div>
 

@@ -83,7 +83,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative overflow-hidden bg-white min-h-screen flex items-center pt-24 pb-16 lg:pt-32 lg:pb-24"
+      className="relative overflow-hidden bg-white min-h-auto lg:min-h-screen flex items-center pt-24 pb-10 lg:pt-32 lg:pb-24"
     >
       {/* Soft gradient accents in corners */}
       <div 
@@ -145,7 +145,7 @@ export default function Hero() {
           {/* Right Side: Product Showcase Placeholder */}
           <div
             data-hero-images-placeholder
-            className="order-1 lg:order-2 w-full h-[400px] sm:h-[450px] lg:h-[550px] relative select-none flex items-center justify-center"
+            className="order-1 lg:order-2 w-full h-[280px] sm:h-[320px] lg:h-[550px] relative select-none flex items-center justify-center"
           />
 
           {/* Left Side: Content (order 2 on mobile, order 1 on desktop) */}
