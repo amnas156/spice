@@ -2,6 +2,7 @@ import React from "react";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import ScrollShowcase from "@/components/ScrollShowcase";
 
 const ProductsCatalog = dynamic(() => import("@/components/ProductsCatalog"));
 const WhyChooseUs = dynamic(() => import("@/components/WhyChooseUs"));
@@ -13,8 +14,10 @@ export default function Home() {
     <>
       <Navbar />
       <main id="main-content" className="flex flex-1 flex-col">
-        <Hero />
-        <ProductsCatalog />
+        <ScrollShowcase>
+          <Hero />
+          <ProductsCatalog />
+        </ScrollShowcase>
         <WhyChooseUs />
         <Contact />
       </main>

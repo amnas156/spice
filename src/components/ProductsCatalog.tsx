@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ArrowRight, Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ProductMedia } from "@/components/ui/ProductMedia";
@@ -33,6 +33,10 @@ export default function ProductsCatalog() {
     ),
   );
   const [toast, setToast] = useState("");
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const flashToast = (message: string) => {
     setToast(message);
@@ -67,12 +71,16 @@ export default function ProductsCatalog() {
               )}
             >
               <div className="container-page grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-16">
-                <div className={cn(isReversed && "lg:order-2")}>
+                <div
+                  data-product-image-placeholder={product.id}
+                  className={cn(isReversed && "lg:order-2", "mx-auto max-w-md w-full relative")}
+                >
                   <ProductMedia
                     product={product}
                     src={product.id === "mulaku-podi" ? getProductImage(product, selectedVariant) : activeImage}
                     alt={`JADEED ${product.name}`}
-                    className="mx-auto max-w-md"
+                    className="w-full"
+                    imageClassName={isMounted ? "opacity-0 transition-opacity duration-300" : ""}
                   />
                 </div>
 
